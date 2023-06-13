@@ -26,8 +26,7 @@ public class BookingController {
 
     @GetMapping("/{roomId}/availability")
     private ResponseEntity<List<Availability>> getAvailableBookingTimes(@PathVariable Long roomId,
-                                                                       @RequestParam(name = "date", required = false)
-                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date)
+                                                                       @RequestParam(name = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date)
     {
         List<Availability> availableBookingTimes = bookingService.getAvailableBookingTimes(roomId, date);
         return new ResponseEntity<>(availableBookingTimes, HttpStatus.OK);
@@ -35,9 +34,9 @@ public class BookingController {
 
     @PostMapping("/{id}/book")
     private ResponseEntity<SuccessMessage> bookRoom(@PathVariable Long id,
-                                                    @RequestBody BookingDto roomDto)
+                                                    @RequestBody BookingDto bookingDto)
     {
-        SuccessMessage successMessage = bookingService.bookRoom(id, roomDto);
+        SuccessMessage successMessage = bookingService.bookRoom(id, bookingDto);
         return new ResponseEntity<>(successMessage, HttpStatus.CREATED);
     }
 
