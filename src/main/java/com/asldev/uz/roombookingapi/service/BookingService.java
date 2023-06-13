@@ -82,13 +82,14 @@ public class BookingService {
 
         LocalDateTime start = toLocalDateTime(roomDto.getStart());
         LocalDateTime end = toLocalDateTime(roomDto.getEnd());
+        LocalDate currentDate = start.toLocalDate();
 
-        WorkingHours workingHours = new WorkingHours(start.toLocalDate());
+        WorkingHours workingHours = new WorkingHours(currentDate);
         LocalDateTime roomOpen = workingHours.getRoomOpen();
         LocalDateTime roomClose = workingHours.getRoomClose();
 
         if (isBookingTimeConflict(room, start, end, roomOpen, roomClose)){
-            throw new GoneException("uzr, siz tanlagan vaqtda xona band");
+            throw new GoneException(ConstantMessages.BAND);
         }
         Booking booking = new Booking();
         booking.setRoom(room);
@@ -106,6 +107,10 @@ public class BookingService {
     }
     private boolean isBookingTimeConflict(Room room, LocalDateTime start, LocalDateTime end, LocalDateTime roomOpened, LocalDateTime roomClosed) {
         List<Booking> bookingList = bookingRepository.findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(room, roomOpened, roomClosed);
+        if (bookingList.size() == 0){
+            return false;
+        }
+        System.out.println(bookingList);
         for (Booking bookedRoom : bookingList){
             if (start.isBefore(bookedRoom.getStart()) && end.isBefore(bookedRoom.getStart())) {
                 return false;
