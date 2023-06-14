@@ -55,19 +55,17 @@ public class BookingService {
 
     private List<Availability> findAvailableBookingTimes(Room room, LocalDate selectedDate) {
         WorkingHours workingHours = new WorkingHours(selectedDate);
-        LocalDateTime roomOpen = workingHours.getRoomOpen();
-        LocalDateTime roomClose = workingHours.getRoomClose();
-        List<Booking> bookingList = bookingRepository.findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(room, roomOpen, roomClose);
+        List<Booking> bookingList = bookingRepository.findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(room, workingHours.getRoomOpen(), workingHours.getRoomClose());
         List<Availability> availabilities = new ArrayList<>();
 
         for (Booking booking : bookingList) {
             LocalDateTime start = booking.getStart();
             LocalDateTime end = booking.getEnd();
-            if ( roomOpen.isEqual(start) ){
+            if ( workingHours.getRoomOpen().isEqual(start) ){
                 workingHours.setRoomOpen(end);
                 continue;
             }
-            if (roomOpen.isBefore(start)){
+            if ( workingHours.getRoomOpen().isBefore(start)){
                 availabilities.add(new Availability(workingHours.getRoomOpen(), start));
                 workingHours.setRoomOpen(end);
             }
@@ -107,17 +105,22 @@ public class BookingService {
     }
     private boolean isBookingTimeConflict(Room room, LocalDateTime start, LocalDateTime end, LocalDateTime roomOpened, LocalDateTime roomClosed) {
         List<Booking> bookingList = bookingRepository.findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(room, roomOpened, roomClosed);
-        if (bookingList.size() == 0){
+        if (bookingList.isEmpty()){
             return false;
         }
-        System.out.println(bookingList);
         for (Booking bookedRoom : bookingList){
-            if (start.isBefore(bookedRoom.getStart()) && end.isBefore(bookedRoom.getStart())) {
-                return false;
+            if (    (start.isEqual(bookedRoom.getStart()) && end.isEqual(bookedRoom.getEnd())) ||
+                    (start.isEqual(bookedRoom.getStart()) && end.isAfter(bookedRoom.getEnd())) ||
+                    (start.isBefore(bookedRoom.getStart()) && end.isEqual(bookedRoom.getEnd())) ||
+                    (start.isBefore(bookedRoom.getStart()) && end.isAfter(bookedRoom.getEnd())) ||
+                    (start.isBefore(bookedRoom.getStart()) && end.isAfter(bookedRoom.getStart())) ||
+                    (start.isAfter(bookedRoom.getStart()) && start.isBefore(bookedRoom.getEnd())) ||
+                    (end.isAfter(bookedRoom.getStart()) && end.isBefore(bookedRoom.getEnd()))  )
+            {
+                return true;
             }
-            else return !start.isAfter(bookedRoom.getEnd()) || !end.isAfter(bookedRoom.getEnd());
         }
-        return true;
+        return false;
     }
     public void delete(Long id) {
         Booking booking = bookingRepository.findById(id)
