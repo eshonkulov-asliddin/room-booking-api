@@ -35,7 +35,7 @@ public class RoomController {
         return new ResponseEntity<>(roomDto, HttpStatus.OK);
 
     }
-    @PostMapping("/create")
+    @PostMapping
     private ResponseEntity<RoomDto> create(@RequestBody RoomDto roomDto)
     {
         RoomDto created = roomService.create(roomDto);
@@ -43,14 +43,14 @@ public class RoomController {
     }
 
 
-    @PutMapping("update/{id}")
+    @PutMapping("/{id}")
     private RoomDto update(@PathVariable Long id,
                            @RequestBody RoomDto roomDto)
     {
         return roomService.update(id, roomDto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     private void delete(@PathVariable Long id){
         roomService.delete(id);
