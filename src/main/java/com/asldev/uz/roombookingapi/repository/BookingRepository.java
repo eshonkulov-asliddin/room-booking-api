@@ -14,8 +14,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByRoom(Room room);
 
-    List<Booking> findByRoomOrderByStart(Room room);
-
     List<Booking> findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(Room room, LocalDateTime start, LocalDateTime end);
 
 }
