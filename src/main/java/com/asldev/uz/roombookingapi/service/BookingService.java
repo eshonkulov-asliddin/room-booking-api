@@ -38,7 +38,7 @@ public class BookingService {
 
     public List<BookingDto> findAll(Long id) {
         Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ConstantMessages.TOPILMADI));
+                .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
         List<Booking> allByRoom = bookingRepository.findAllByRoom(room);
         return allByRoom.stream()
                 .map(booking -> mapper.map(booking, BookingDto.class))
@@ -47,7 +47,7 @@ public class BookingService {
 
     public List<Availability> getAvailableBookingTimes(Long roomId, LocalDate date) {
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NotFoundException(ConstantMessages.TOPILMADI));
+                .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
 
         date = Objects.requireNonNullElseGet(date, LocalDate::now);
         return findAvailableBookingTimes(room, date);
@@ -76,7 +76,7 @@ public class BookingService {
 
     public SuccessMessage bookRoom(Long id, BookingDto roomDto) {
         Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ConstantMessages.TOPILMADI));
+                .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
 
         LocalDateTime start = toLocalDateTime(roomDto.getStart());
         LocalDateTime end = toLocalDateTime(roomDto.getEnd());
@@ -87,7 +87,7 @@ public class BookingService {
         LocalDateTime roomClose = workingHours.getRoomClose();
 
         if (isBookingTimeConflict(room, start, end, roomOpen, roomClose)){
-            throw new GoneException(ConstantMessages.BAND);
+            throw new GoneException(ConstantMessages.NOT_AVAILABLE);
         }
         Booking booking = new Booking();
         booking.setRoom(room);
@@ -96,7 +96,7 @@ public class BookingService {
         booking.setResident(roomDto.getResident());
 
         bookingRepository.save(booking);
-        return new SuccessMessage(ConstantMessages.BAND_QILINDI);
+        return new SuccessMessage(ConstantMessages.SUCCESS);
     }
 
     private  LocalDateTime toLocalDateTime(String date){
@@ -124,7 +124,7 @@ public class BookingService {
     }
     public void delete(Long id) {
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ConstantMessages.TOPILMADI));
+                .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
         bookingRepository.delete(booking);
     }
 }
