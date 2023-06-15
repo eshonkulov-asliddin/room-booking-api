@@ -34,8 +34,7 @@ public class BookingController {
 
     @PostMapping("/{id}/book")
     private ResponseEntity<SuccessMessage> bookRoom(@PathVariable Long id,
-                                                    @RequestBody BookingDto bookingDto)
-    {
+                                                    @RequestBody BookingDto bookingDto) {
         SuccessMessage successMessage = bookingService.bookRoom(id, bookingDto);
         return new ResponseEntity<>(successMessage, HttpStatus.CREATED);
     }
