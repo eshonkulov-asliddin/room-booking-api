@@ -41,8 +41,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}/bookings")
-    private ResponseEntity<List<BookingDto>> findAll(@PathVariable Long id)
-    {
+cod    private ResponseEntity<List<BookingDto>> findAll(@PathVariable Long id) {
         List<BookingDto> all = bookingService.findAll(id);
         return new ResponseEntity<>(all, HttpStatus.OK);
     }

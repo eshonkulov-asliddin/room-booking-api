@@ -5,6 +5,7 @@ import com.asldev.uz.roombookingapi.repository.RoomRepository;
 import com.asldev.uz.roombookingapi.repository.entity.Room;
 import com.asldev.uz.roombookingapi.service.dto.PageDto;
 import com.asldev.uz.roombookingapi.service.dto.RoomDto;
+import com.asldev.uz.roombookingapi.service.exception.ArgumentIsNotValidException;
 import com.asldev.uz.roombookingapi.service.exception.NotFoundException;
 import com.asldev.uz.roombookingapi.service.utils.ConstantMessages;
 import com.asldev.uz.roombookingapi.service.validator.Validator;
@@ -64,7 +65,7 @@ public class RoomService {
              dtoType == null ||
              dtoCapacity <= 0 )
         {
-            throw new IllegalArgumentException();
+            throw new ArgumentIsNotValidException(ConstantMessages.BAD_REQUEST);
         }
         Room room = mapper.map(roomDto, Room.class);
         Room save = roomRepository.save(room);

@@ -36,8 +36,7 @@ public class RoomController {
 
     }
     @PostMapping
-    private ResponseEntity<RoomDto> create(@RequestBody RoomDto roomDto)
-    {
+    private ResponseEntity<RoomDto> create(@RequestBody RoomDto roomDto) {
         RoomDto created = roomService.create(roomDto);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
@@ -45,8 +44,7 @@ public class RoomController {
 
     @PutMapping("/{id}")
     private RoomDto update(@PathVariable Long id,
-                           @RequestBody RoomDto roomDto)
-    {
+                           @RequestBody RoomDto roomDto) {
         return roomService.update(id, roomDto);
     }
 
