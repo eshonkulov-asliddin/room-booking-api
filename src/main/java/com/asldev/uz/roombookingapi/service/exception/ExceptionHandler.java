@@ -14,4 +14,9 @@ public class ExceptionHandler {
     public ResponseEntity<Object> handleException(GoneException exception){
         return new ResponseEntity<>(new ErrorMessage(exception.getMessage()), HttpStatus.GONE);
     }
+    @org.springframework.web.bind.annotation.ExceptionHandler(ArgumentIsNotValidException.class)
+    public ResponseEntity<Object> handleException(ArgumentIsNotValidException exception){
+        return new ResponseEntity<>(new ErrorMessage(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
 }
