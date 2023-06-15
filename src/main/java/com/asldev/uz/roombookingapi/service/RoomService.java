@@ -6,6 +6,8 @@ import com.asldev.uz.roombookingapi.repository.entity.Room;
 import com.asldev.uz.roombookingapi.service.dto.PageDto;
 import com.asldev.uz.roombookingapi.service.dto.RoomDto;
 import com.asldev.uz.roombookingapi.service.exception.NotFoundException;
+import com.asldev.uz.roombookingapi.service.utils.ConstantMessages;
+import com.asldev.uz.roombookingapi.service.validator.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -48,11 +50,22 @@ public class RoomService {
 
     public RoomDto findById(Long id){
         Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("topilmadi"));
+                .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
         return mapper.map(room, RoomDto.class);
     }
 
     public RoomDto create(RoomDto roomDto){
+        Validator.validate(roomDto);
+
+        String dtoName = roomDto.getName();
+        RoomType dtoType = roomDto.getType();
+        int dtoCapacity = roomDto.getCapacity();
+        if ( dtoName == null || dtoName.isEmpty() ||
+             dtoType == null ||
+             dtoCapacity <= 0 )
+        {
+            throw new IllegalArgumentException();
+        }
         Room room = mapper.map(roomDto, Room.class);
         Room save = roomRepository.save(room);
         return mapper.map(save, RoomDto.class);
@@ -60,25 +73,31 @@ public class RoomService {
 
     public RoomDto update(Long id, RoomDto roomDto) {
         Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("topilmadi"));
+                .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
+
+        Validator.validate(roomDto);
+
         String name = room.getName();
-        if (!roomDto.getName().equalsIgnoreCase(name)){
-            room.setName(roomDto.getName());
+        String dtoName = roomDto.getName();
+        if (!dtoName.equalsIgnoreCase(name)){
+            room.setName(dtoName);
         }
         RoomType type = room.getType();
-        if (roomDto.getType() != type){
-            room.setType(roomDto.getType());
+        RoomType dtoType = roomDto.getType();
+        if (dtoType != type){
+            room.setType(dtoType);
         }
         int capacity = room.getCapacity();
-        if (roomDto.getCapacity() != capacity){
-            room.setCapacity(roomDto.getCapacity());
+        int dtoCapacity = roomDto.getCapacity();
+        if (dtoCapacity != capacity){
+            room.setCapacity(dtoCapacity);
         }
         Room save = roomRepository.save(room);
         return mapper.map(save, RoomDto.class);
     }
     public void delete(Long id){
         Room byId = roomRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("topilmadi"));
+                .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
         roomRepository.delete(byId);
     }
 }
