@@ -58,15 +58,6 @@ public class RoomService {
     public RoomDto create(RoomDto roomDto){
         Validator.validate(roomDto);
 
-        String dtoName = roomDto.getName();
-        RoomType dtoType = roomDto.getType();
-        int dtoCapacity = roomDto.getCapacity();
-        if ( dtoName == null || dtoName.isEmpty() ||
-             dtoType == null ||
-             dtoCapacity <= 0 )
-        {
-            throw new ArgumentIsNotValidException(ConstantMessages.BAD_REQUEST);
-        }
         Room room = mapper.map(roomDto, Room.class);
         Room save = roomRepository.save(room);
         return mapper.map(save, RoomDto.class);
