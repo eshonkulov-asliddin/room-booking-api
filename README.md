@@ -1,31 +1,60 @@
-# YBKY saralash bosqichi topshirig'i
+# Xonalarni band qilish uchun API
 
-Impactt co-working markazi rezidentlariga majlis xonalarni oldindan oson band qilish uchun tizim yaratmoqchi va bunda sizning yordamingiz kerak.
+Bu API Impactt co-working markazi rezidentlariga majlis xonalarni oldindan oson band qilish uchun yaratildi.
 
-Backend yo'nalishiga topshirganlar tizim uchun REST API tuzishi kerak bo'ladi. Frontend yo'nalishi qatnashchilaridan esa ushbu tizim uchun foydalanuvchi interfeysini yasash kutiladi.
-
-## Tizimning funksional talablari:
+## Tizim xususiyatlari:
 
 - Xonalar haqida ma'lumot saqlash va taqdim qila olish;
+- Xonalar yaratish, bor xonalarni yangilash va o'chirish
 - Xonani ko'rsatilgan vaqt oralig'i uchun band qila olish;
 - Bir xonaning band qilingan vaqtlari ustma-ust tushmasligi kerak;
-- Autentifikatsiya (login) imkoniyatini qo'shish talab qilinmaydi.
 
-## Ko'p so'ralgan savollar:
+## Ishlatilgan Texnalogiyalar:
 
-- Qaysi dasturlash tilidan foydalanish kerak? Istalgan!
-- Kutubxona va freymvorklardan foydalanish mumkinmi? Ha.
-- Qaysi ma'lumotlar omboridan foydalanish mumkin? Fuksional talablarni qondiradigan istalgan ma'lumotlar omboridan foydalanishingiz mumkin.
+- Dasturlash tili: Java
+- Kutubxona va freymvork: Spring
+- Ma'lumotlar ombori: PostgreSQL
+---
 
-## Loyihani topshirish uchun talablar.
+## Xona yaratish uchun API
+Eslatma:
 
-- GitHubda `private` repozitoriya yarating
-- Ishingizni bosqichma-bosqich `commit` qilib boring
-- GitHub repozitoriyaning `settings` qismidan `ybky42` foydalanuvchisini `Collaborator` sifatida qo'shing.
-- **20-iyunga qadar loyihani yakunlab, `Pull Request` yaratib, `ybky42` foydalanuvchisini `Reviewer` sifatida qo'shing.**
-- Savollaringizni ushbu `gist` ostidagi izohlarda qoldiring.
+- `type`: mavjud xona turlari (`focus`, `team`, `conference`)
+
+```
+POST /api/rooms
+```
+
+```json
+{
+  "name": "ybky",
+  "type": "team",
+  "capacity": 14
+}
+```
+---
+
+HTTP 201: Xona muvaffaqiyatli yaratilganda
+
+```json
+{
+  "id": 1,
+  "name": "ybky",
+  "type": "team",
+  "capacity": 14
+}
+```
+
+HTTP 400: Parametrlar xato bo'lganda
+
+```json
+{
+  "error": "kiritilgan parametrlar xato"
+}
+```
 
 ---
+
 
 ## Mavjud xonalarni olish uchun API
 
@@ -67,6 +96,55 @@ HTTP 200
       "capacity": 15
     }
   ]
+}
+```
+
+---
+
+
+## Mavjud xonalarni o'zgartirish uchun API
+
+Eslatma:
+
+- `type`: mavjud xona turlari (`focus`, `team`, `conference`)
+
+
+```
+PUT /api/rooms/{id}
+```
+
+```json
+{
+  "name": "ybky backend",
+  "type": "focus",
+  "capacity": 24
+}
+```
+
+HTTP 200: Xona muvaffaqiyatli o'zgartirilganda
+
+```json
+{
+  "id": 1,
+  "name": "ybky backend",
+  "type": "focus",
+  "capacity": 24
+}
+```
+
+HTTP 404: Xona mavjud bo'lmasa
+
+```json
+{
+  "error": "topilmadi"
+}
+```
+
+HTTP 400: Parametrlar xato bo'lganda
+
+```json
+{
+  "error": "kiritilgan parametrlar xato"
 }
 ```
 
