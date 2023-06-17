@@ -7,7 +7,7 @@ import com.asldev.uz.roombookingapi.repository.entity.Room;
 import com.asldev.uz.roombookingapi.service.dto.BookingDto;
 import com.asldev.uz.roombookingapi.service.exception.GoneException;
 import com.asldev.uz.roombookingapi.service.exception.NotFoundException;
-import com.asldev.uz.roombookingapi.service.exception.SuccessMessage;
+import com.asldev.uz.roombookingapi.service.utils.SuccessMessage;
 import com.asldev.uz.roombookingapi.service.utils.Availability;
 import com.asldev.uz.roombookingapi.service.utils.ConstantMessages;
 import com.asldev.uz.roombookingapi.service.utils.WorkingHours;

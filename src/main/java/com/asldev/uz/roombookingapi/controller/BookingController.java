@@ -2,7 +2,7 @@ package com.asldev.uz.roombookingapi.controller;
 
 import com.asldev.uz.roombookingapi.service.BookingService;
 import com.asldev.uz.roombookingapi.service.dto.BookingDto;
-import com.asldev.uz.roombookingapi.service.exception.SuccessMessage;
+import com.asldev.uz.roombookingapi.service.utils.SuccessMessage;
 import com.asldev.uz.roombookingapi.service.utils.Availability;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
