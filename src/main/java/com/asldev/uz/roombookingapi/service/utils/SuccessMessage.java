@@ -1,4 +1,4 @@
-package com.asldev.uz.roombookingapi.service.exception;
+package com.asldev.uz.roombookingapi.service.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
