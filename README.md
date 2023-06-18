@@ -11,9 +11,9 @@ Bu API Impactt co-working markazi rezidentlariga majlis xonalarni oldindan oson 
 
 ## Ishlatilgan Texnalogiyalar:
 
-- Dasturlash tili: Java
-- Kutubxona va freymvork: Spring
-- Ma'lumotlar ombori: PostgreSQL
+- Dasturlash tili: **Java**
+- Kutubxona va freymvork: **Spring**
+- Ma'lumotlar ombori: **PostgreSQL**
 ---
 
 ## Xona yaratish uchun API
@@ -101,6 +101,33 @@ HTTP 200
 
 ---
 
+## Xonani id orqali olish uchun API
+
+```
+GET /api/rooms/{id}
+```
+
+HTTP 200
+
+```json
+{
+  "id": 3,
+  "name": "express24",
+  "type": "conference",
+  "capacity": 15
+}
+```
+
+HTTP 404
+
+```json
+{
+  "error": "topilmadi"
+}
+```
+
+---
+
 
 ## Mavjud xonalarni o'zgartirish uchun API
 
@@ -150,32 +177,6 @@ HTTP 400: Parametrlar xato bo'lganda
 
 ---
 
-## Xonani id orqali olish uchun API
-
-```
-GET /api/rooms/{id}
-```
-
-HTTP 200
-
-```json
-{
-  "id": 3,
-  "name": "express24",
-  "type": "conference",
-  "capacity": 15
-}
-```
-
-HTTP 404
-
-```json
-{
-  "error": "topilmadi"
-}
-```
-
----
 
 ## Xonaning bo'sh vaqtlarini olish uchun API
 
@@ -237,3 +238,29 @@ HTTP 410: Tanlangan vaqtda xona band bo'lganda
   "error": "uzr, siz tanlagan vaqtda xona band"
 }
 ```
+
+---
+
+## Xonani o'chirish uchun API
+
+```
+DELETE /api/rooms/{id}
+```
+---
+
+HTTP 201: Xona muvaffaqiyatli band qilinganda
+
+```json
+{
+  "message": "xona muvaffaqiyatli o'chirildi"
+}
+```
+
+HTTP 404: Xona mavjud bo'lmasa
+
+```json
+{
+  "error": "topilmadi"
+}
+```
+
