@@ -4,6 +4,8 @@ import com.asldev.uz.roombookingapi.enums.RoomType;
 import com.asldev.uz.roombookingapi.service.RoomService;
 import com.asldev.uz.roombookingapi.service.dto.PageDto;
 import com.asldev.uz.roombookingapi.service.dto.RoomDto;
+import com.asldev.uz.roombookingapi.service.utils.ConstantMessages;
+import com.asldev.uz.roombookingapi.service.utils.SuccessMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +53,9 @@ public class RoomController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void delete(@PathVariable Long id){
+    private ResponseEntity<SuccessMessage> delete(@PathVariable Long id){
         roomService.delete(id);
+        return new ResponseEntity<>(new SuccessMessage(ConstantMessages.DELETE), HttpStatus.NO_CONTENT);
     }
 
 }
