@@ -3,7 +3,8 @@ package com.asldev.uz.roombookingapi;
 import com.asldev.uz.roombookingapi.enums.RoomType;
 import com.asldev.uz.roombookingapi.repository.entity.Resident;
 import com.asldev.uz.roombookingapi.repository.entity.Room;
-import com.asldev.uz.roombookingapi.service.dto.BookingDto;
+import com.asldev.uz.roombookingapi.service.dto.BookingDtoRequest;
+import com.asldev.uz.roombookingapi.service.dto.RoomDtoRequest;
 import com.asldev.uz.roombookingapi.service.utils.ConstantMessages;
 import io.restassured.http.Header;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,7 +28,7 @@ public class RoomBookingEndpointTest {
     @Test
     public void givenCustomRoomObj_whenObjIsValid_thenCreateRoom(){
         given()
-            .body(new Room("ybky", RoomType.team, 14))
+            .body(new RoomDtoRequest("ybky", RoomType.team, 14))
             .header(new Header("x-custom-header", "value"))
             .contentType("application/json")
         .when()
@@ -47,7 +48,7 @@ public class RoomBookingEndpointTest {
         String end = LocalDateTime.now().plusHours(2).format(formatter);
         given()
                 .pathParam("roomId", 1)
-                .body(new BookingDto(start, end, new Resident("Asliddin Eshonkulov")))
+                .body(new BookingDtoRequest(start, end, new Resident("Asliddin Eshonkulov")))
                 .contentType("application/json")
         .when()
                 .post("/{roomId}/book")
