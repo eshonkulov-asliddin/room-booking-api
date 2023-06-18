@@ -16,5 +16,5 @@ public class PageDto {
     private int page;
     private long count;
     private int pageSize;
-    private List<Room> results;
+    private List<RoomDtoResponse> results;
 }
