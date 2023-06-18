@@ -25,7 +25,7 @@ public class RoomBookingEndpointTest {
     }
 
     @Test
-    public void givenCustomRoomObj_whenObjValid_thenCreateRoom(){
+    public void givenCustomRoomObj_whenObjIsValid_thenCreateRoom(){
         given()
             .body(new Room("ybky", RoomType.team, 14))
             .header(new Header("x-custom-header", "value"))
