@@ -10,8 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomDto {
-    private Long id;
+public class RoomDtoRequest {
     private String name;
     private RoomType type;
     private int capacity;

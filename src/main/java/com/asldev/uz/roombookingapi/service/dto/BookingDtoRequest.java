@@ -10,16 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BookingDto {
-    private Long id;
+public class BookingDtoRequest {
     private String start;
     private String end;
     private Resident resident;
-
-
-    public BookingDto(String start, String end, Resident resident){
-        this.start = start;
-        this.end = end;
-        this.resident = resident;
-    }
 }
