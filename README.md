@@ -16,6 +16,10 @@ Bu API Impactt co-working markazi rezidentlariga majlis xonalarni oldindan oson 
 - Ma'lumotlar ombori: **PostgreSQL**
 ---
 
+## Swagger UI 
+* path: `http://localhost:8080/swagger-ui/index.html`
+* api-docs: `http://localhost:8080/api-docs/users`
+
 ## Xona yaratish uchun API
 Eslatma:
 
