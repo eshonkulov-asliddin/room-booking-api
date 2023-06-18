@@ -4,7 +4,8 @@ import com.asldev.uz.roombookingapi.repository.BookingRepository;
 import com.asldev.uz.roombookingapi.repository.RoomRepository;
 import com.asldev.uz.roombookingapi.repository.entity.Booking;
 import com.asldev.uz.roombookingapi.repository.entity.Room;
-import com.asldev.uz.roombookingapi.service.dto.BookingDto;
+import com.asldev.uz.roombookingapi.service.dto.BookingDtoRequest;
+import com.asldev.uz.roombookingapi.service.dto.BookingDtoResponse;
 import com.asldev.uz.roombookingapi.service.exception.GoneException;
 import com.asldev.uz.roombookingapi.service.exception.NotFoundException;
 import com.asldev.uz.roombookingapi.service.utils.SuccessMessage;
@@ -36,12 +37,12 @@ public class BookingService {
         this.mapper = new ModelMapper();
     }
 
-    public List<BookingDto> findAll(Long id) {
+    public List<BookingDtoResponse> findAll(Long id) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
         List<Booking> allByRoom = bookingRepository.findAllByRoom(room);
         return allByRoom.stream()
-                .map(booking -> mapper.map(booking, BookingDto.class))
+                .map(booking -> mapper.map(booking, BookingDtoResponse.class))
                 .collect(Collectors.toList());
     }
 
@@ -74,7 +75,7 @@ public class BookingService {
         return availabilities;
     }
 
-    public SuccessMessage bookRoom(Long id, BookingDto roomDto) {
+    public SuccessMessage bookRoom(Long id, BookingDtoRequest roomDto) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
 
