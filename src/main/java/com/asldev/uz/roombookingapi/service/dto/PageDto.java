@@ -1,6 +1,5 @@
 package com.asldev.uz.roombookingapi.service.dto;
 
-import com.asldev.uz.roombookingapi.repository.entity.Room;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +14,6 @@ import java.util.List;
 public class PageDto {
     private int page;
     private long count;
-    private int pageSize;
+    private int page_size;
     private List<RoomDtoResponse> results;
 }
