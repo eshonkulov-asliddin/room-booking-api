@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Availability {
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private String start;
+    private String end;
 }
