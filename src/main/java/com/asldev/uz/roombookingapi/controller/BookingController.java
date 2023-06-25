@@ -36,10 +36,9 @@ public class BookingController {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "Room with given id is not found")
     })
-    @GetMapping("/{roomId}/availability")
+    @GetMapping("/{id}/availability")
     private ResponseEntity<List<Availability>> getAvailableBookingTimes(@Parameter(description = "ID of room that need to fetched", required = true) @PathVariable Long id,
-                                                                       @Parameter(description = "Date for fetching available booking times") @RequestParam(name = "date", required = false)
-                                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date)
+                                                                       @RequestParam(name = "date", required = false) String date)
     {
         List<Availability> availableBookingTimes = bookingService.getAvailableBookingTimes(id, date);
         return new ResponseEntity<>(availableBookingTimes, HttpStatus.OK);
@@ -50,10 +49,9 @@ public class BookingController {
             @ApiResponse(responseCode = "201", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "Room with given id is not found")
     })
-    @PostMapping("/{id}/book")
-    private ResponseEntity<SuccessMessage> bookRoom(@Parameter(description = "ID of room for booking", required = true) @PathVariable Long id,
-                                                    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Object for creating new Booking")
-                                                        @RequestBody BookingDtoRequest createRequest) {
+    @PostMapping("/{id}/book/")
+    private ResponseEntity<SuccessMessage> bookRoom(@PathVariable Long id,
+                                                    @RequestBody BookingDtoRequest createRequest) {
         SuccessMessage successMessage = bookingService.bookRoom(id, createRequest);
         return new ResponseEntity<>(successMessage, HttpStatus.CREATED);
     }
