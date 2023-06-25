@@ -50,7 +50,7 @@ public class RoomService {
                 .toList();
         pageDto.setPage(pageNumber);
         pageDto.setCount(all.getNumberOfElements());
-        pageDto.setPageSize(pageSize);
+        pageDto.setPage_size(pageSize);
         pageDto.setResults(allContents);
 
         return pageDto;

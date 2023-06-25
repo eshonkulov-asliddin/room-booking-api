@@ -35,9 +35,9 @@ public class RoomController {
     @GetMapping
     private ResponseEntity<PageDto> findAll(@Parameter(description = "Key for fetching objects by") @RequestParam(required = false) String search,
                                             @Parameter(description = "Available room type") @RequestParam(required = false) RoomType type,
-                                            @Parameter(description = "Current page") @RequestParam(defaultValue = "0") int pageNumber,
-                                            @Parameter(description = "Number of objects") @RequestParam(defaultValue = "10") int pageSize){
-        PageDto all = roomService.findAll(search, type, pageNumber, pageSize);
+                                            @Parameter(description = "Current page") @RequestParam(defaultValue = "0") int page,
+                                            @Parameter(description = "Number of objects") @RequestParam(defaultValue = "10") int page_size){
+        PageDto all = roomService.findAll(search, type, page, page_size);
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
