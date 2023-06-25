@@ -46,11 +46,11 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    public List<Availability> getAvailableBookingTimes(Long roomId, LocalDate date) {
+    public List<Availability> getAvailableBookingTimes(Long roomId, String stringDate) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
 
-        date = Objects.requireNonNullElseGet(date, LocalDate::now);
+        LocalDate date = toLocalDate(stringDate);
         return findAvailableBookingTimes(room, date);
     }
 
@@ -67,11 +67,18 @@ public class BookingService {
                 continue;
             }
             if ( workingHours.getRoomOpen().isBefore(start)){
-                availabilities.add(new Availability(workingHours.getRoomOpen(), start));
+
+                availabilities.add(new Availability(
+                        localDateTimeFormatter(workingHours.getRoomOpen()),
+                        localDateTimeFormatter(start)
+                ));
                 workingHours.setRoomOpen(end);
             }
         }
-        availabilities.add(new Availability(workingHours.getRoomOpen(), workingHours.getRoomClose()));
+        availabilities.add(new Availability(
+                localDateTimeFormatter(workingHours.getRoomOpen()),
+                localDateTimeFormatter(workingHours.getRoomClose())));
+
         return availabilities;
     }
 
@@ -103,6 +110,17 @@ public class BookingService {
     private  LocalDateTime toLocalDateTime(String date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ConstantMessages.LOCAL_DATE_TIME_FORMATTER);
         return LocalDateTime.parse(date, formatter);
+    }
+    private  LocalDate toLocalDate(String date){
+        if (date == null){
+            return LocalDate.now();
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return LocalDate.parse(date, formatter);
+    }
+    private String localDateTimeFormatter(LocalDateTime dateTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        return dateTime.format(formatter);
     }
     private boolean isBookingTimeConflict(Room room, LocalDateTime start, LocalDateTime end, LocalDateTime roomOpened, LocalDateTime roomClosed) {
         List<Booking> bookingList = bookingRepository.findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(room, roomOpened, roomClosed);
