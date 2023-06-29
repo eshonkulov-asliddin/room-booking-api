@@ -2,7 +2,7 @@
 
 Bu API Impactt co-working markazi rezidentlariga majlis xonalarni oldindan oson band qilish uchun yaratildi.
 
-## Tizim xususiyatlari:
+## Tizim funksiyalari:
 
 - Xonalar haqida ma'lumot saqlash va taqdim qila olish;
 - Xonalar yaratish, bor xonalarni yangilash va o'chirish
