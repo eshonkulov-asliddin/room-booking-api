@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,16 +68,15 @@ public class BookingService {
             if ( workingHours.getRoomOpen().isBefore(start)){
 
                 availabilities.add(new Availability(
-                        localDateTimeFormatter(workingHours.getRoomOpen()),
-                        localDateTimeFormatter(start)
+                        toStringFormatter(workingHours.getRoomOpen()),
+                        toStringFormatter(start)
                 ));
                 workingHours.setRoomOpen(end);
             }
         }
         availabilities.add(new Availability(
-                localDateTimeFormatter(workingHours.getRoomOpen()),
-                localDateTimeFormatter(workingHours.getRoomClose())));
-
+                toStringFormatter(workingHours.getRoomOpen()),
+                toStringFormatter(workingHours.getRoomClose())));
         return availabilities;
     }
 
@@ -115,11 +113,11 @@ public class BookingService {
         if (date == null){
             return LocalDate.now();
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ConstantMessages.LOCAL_DATE_FORMATTER);
         return LocalDate.parse(date, formatter);
     }
-    private String localDateTimeFormatter(LocalDateTime dateTime){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private String toStringFormatter(LocalDateTime dateTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ConstantMessages.LOCAL_DATE_TIME_FORMATTER);
         return dateTime.format(formatter);
     }
     private boolean isBookingTimeConflict(Room room, LocalDateTime start, LocalDateTime end, LocalDateTime roomOpened, LocalDateTime roomClosed) {
