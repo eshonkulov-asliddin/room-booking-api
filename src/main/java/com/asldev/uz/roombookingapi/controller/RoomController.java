@@ -85,7 +85,7 @@ public class RoomController {
     })
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private ResponseEntity<SuccessMessage> delete(@Parameter(description = "ID of room that need to be deleted") @PathVariable Long id){
+    private ResponseEntity<SuccessMessage> delete(@PathVariable Long id){
         roomService.delete(id);
         return new ResponseEntity<>(new SuccessMessage(ConstantMessages.DELETE), HttpStatus.NO_CONTENT);
     }
