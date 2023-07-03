@@ -71,6 +71,7 @@ public class BookingController {
             @ApiResponse(responseCode = "204", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "Room with given id is not found")
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/bookings/{id}")
     private void delete(@Parameter(description = "ID of booking that need to be deleted", required = true) @PathVariable Long id){
         bookingService.delete(id);
