@@ -1,29 +1,32 @@
-# Xonalarni band qilish uchun API
+Here is the translated README.md:
 
-Bu API Impactt co-working markazi rezidentlariga majlis xonalarni oldindan oson band qilish uchun yaratildi.
+"""
+# API for Booking Rooms
 
-## Tizim funksiyalari:
+This API is created to help resident users of Impactt co-working zone easily pre-book meeting rooms.
 
-- Xonalar haqida ma'lumot saqlash va taqdim qila olish;
-- Xonalar yaratish, bor xonalarni yangilash va o'chirish
-- Xonani ko'rsatilgan vaqt oralig'i uchun band qila olish;
-- Bir xonaning band qilingan vaqtlari ustma-ust tushmasligi kerak;
+## System functionalities:
 
-## Ishlatilgan Texnalogiyalar:
+- Storing and providing information about rooms;
+- Creating, updating and deleting rooms
+- Blocking a room for a certain period;
+- One room should not be blocked multiple times at the same time.
 
-- Dasturlash tili: **Java**
-- Kutubxona va freymvork: **Spring**
-- Ma'lumotlar ombori: **PostgreSQL**
+## Technologies Used:
+
+- Programming Language: **Java**
+- Library and Framework: **Spring**
+- Database: **PostgreSQL**
 ---
 
-## Swagger UI 
+## Swagger UI
 * path: `http://localhost:8080/swagger-ui/index.html`
 * api-docs: `http://localhost:8080/api-docs/users`
 
-## Xona yaratish uchun API
-Eslatma:
+## API to create a room
+Note:
 
-- `type`: mavjud xona turlari (`focus`, `team`, `conference`)
+- `type` : available room types (`focus`, `team`, `conference`)
 
 ```
 POST /api/rooms
@@ -38,7 +41,7 @@ POST /api/rooms
 ```
 ---
 
-HTTP 201: Xona muvaffaqiyatli yaratilganda
+HTTP 201: Room successfully created
 
 ```json
 {
@@ -49,29 +52,29 @@ HTTP 201: Xona muvaffaqiyatli yaratilganda
 }
 ```
 
-HTTP 400: Parametrlar xato bo'lganda
+HTTP 400: In case of wrong parameters
 
 ```json
 {
-  "error": "kiritilgan parametrlar xato"
+  "error": "wrong parameters"
 }
 ```
 
 ---
 
 
-## Mavjud xonalarni olish uchun API
+## API to get available rooms
 
 ```
 GET /api/rooms
 ```
 
-Parametrlar:
+Parameters:
 
-- `search`: Xona nomi orqali qidirish
-- `type`: xona turi bo'yicha saralash (`focus`, `team`, `conference`)
-- `page`: sahifa tartib raqami
-- `page_size`: sahifadagi maksimum natijalar soni
+- `search` : Search by room name
+- `type` : sort by room type (`focus`, `team`, `conference`)
+- `page` : page sequence number
+- `page_size` : maximum results on a page
 
 HTTP 200
 
@@ -105,7 +108,7 @@ HTTP 200
 
 ---
 
-## Xonani id orqali olish uchun API
+## API to get room by id
 
 ```
 GET /api/rooms/{id}
@@ -126,18 +129,18 @@ HTTP 404
 
 ```json
 {
-  "error": "topilmadi"
+  "error": "not found"
 }
 ```
 
 ---
 
 
-## Mavjud xonalarni o'zgartirish uchun API
+## API to change existing rooms
 
-Eslatma:
+Note:
 
-- `type`: mavjud xona turlari (`focus`, `team`, `conference`)
+- `type` : available room types (`focus`, `team`, `conference`)
 
 
 ```
@@ -152,7 +155,7 @@ PUT /api/rooms/{id}
 }
 ```
 
-HTTP 200: Xona muvaffaqiyatli o'zgartirilganda
+HTTP 200: Room successfully updated
 
 ```json
 {
@@ -163,34 +166,34 @@ HTTP 200: Xona muvaffaqiyatli o'zgartirilganda
 }
 ```
 
-HTTP 404: Xona mavjud bo'lmasa
+HTTP 404: If room does not exist
 
 ```json
 {
-  "error": "topilmadi"
+  "error": "not found"
 }
 ```
 
-HTTP 400: Parametrlar xato bo'lganda
+HTTP 400: In case of wrong parameters
 
 ```json
 {
-  "error": "kiritilgan parametrlar xato"
+  "error": "wrong parameters"
 }
 ```
 
 ---
 
 
-## Xonaning bo'sh vaqtlarini olish uchun API
+## API to get available times for a room
 
 ```
 GET /api/rooms/{id}/availability
 ```
 
-Parametrlar:
+Parameters:
 
-- `date`: sana (ko'rsatilmasa bugungi sana olinadi)
+- `date` : date (if not specified, the current date is taken)
 
 Response 200
 
@@ -209,7 +212,7 @@ Response 200
 
 ---
 
-## Xonani band qilish uchun API
+## API to block a room
 
 ```
 POST /api/rooms/{id}/book
@@ -227,44 +230,44 @@ POST /api/rooms/{id}/book
 
 ---
 
-HTTP 201: Xona muvaffaqiyatli band qilinganda
+HTTP 201: Room successfully blocked
 
 ```json
 {
-  "message": "xona muvaffaqiyatli band qilindi"
+  "message": "room successfully blocked"
 }
 ```
 
-HTTP 410: Tanlangan vaqtda xona band bo'lganda
+HTTP 410: In case of room already blocked
 
 ```json
 {
-  "error": "uzr, siz tanlagan vaqtda xona band"
+  "error": "Sorry, the room is already blocked at your chosen times"
 }
 ```
 
 ---
 
-## Xonani o'chirish uchun API
+## API to delete a room
 
 ```
 DELETE /api/rooms/{id}
 ```
 ---
 
-HTTP 201: Xona muvaffaqiyatli band qilinganda
+HTTP 201: Room successfully deleted
 
 ```json
 {
-  "message": "xona muvaffaqiyatli o'chirildi"
+  "message": "room successfully deleted"
 }
 ```
 
-HTTP 404: Xona mavjud bo'lmasa
+HTTP 404: If room does not exist
 
 ```json
 {
-  "error": "topilmadi"
+  "error": "not found"
 }
 ```
-
+"""
