@@ -7,7 +7,7 @@ import com.asldev.uz.roombookingapi.service.dto.RoomDtoRequest;
 import com.asldev.uz.roombookingapi.service.utils.ConstantMessages;
 import io.restassured.http.Header;
 import org.junit.jupiter.api.*;
-uimport org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
