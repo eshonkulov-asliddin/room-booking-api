@@ -9,6 +9,8 @@ import com.asldev.uz.roombookingapi.service.dto.RoomDtoResponse;
 import com.asldev.uz.roombookingapi.service.dto.RoomDtoUpdate;
 import com.asldev.uz.roombookingapi.service.exception.NotFoundException;
 import com.asldev.uz.roombookingapi.service.utils.ConstantMessages;
+import com.asldev.uz.roombookingapi.service.validator.RoomRequestValidator;
+import com.asldev.uz.roombookingapi.service.validator.RoomUpdateValidator;
 import com.asldev.uz.roombookingapi.service.validator.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +65,8 @@ public class RoomService {
     }
 
     public RoomDtoResponse create(RoomDtoRequest createRequest){
-        Validator.validate(createRequest);
+        Validator<RoomDtoRequest> validator = new RoomRequestValidator();
+        validator.validate(createRequest); // validate
 
         Room room = mapper.map(createRequest, Room.class);
         Room save = roomRepository.save(room);
@@ -74,7 +77,8 @@ public class RoomService {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
 
-        Validator.validate(updateRequest);
+        Validator<RoomDtoUpdate> validator = new RoomUpdateValidator();
+        validator.validate(updateRequest); // validate
 
         String name = room.getName();
         String dtoName = updateRequest.getName();
