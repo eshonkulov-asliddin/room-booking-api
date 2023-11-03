@@ -20,15 +20,31 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
+
+    /* Field declarations
+     * ==================
+     * bookingRepository is used to access the booking-related operations in the database
+     * roomRepository is used to access the room-related operations in the database
+     * mapper aids in conversion between Entity objects and DTOs
+     */
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
     private final ModelMapper mapper;
 
+    /**
+     * Constructor for BookingService.
+     * Dependencies are automatically injected by Spring.
+     *
+     * @param bookingRepository Interface for booking-related database operations
+     * @param roomRepository Interface for room-related database operations
+     */
     @Autowired
     public BookingService(BookingRepository bookingRepository, RoomRepository roomRepository){
         this.bookingRepository = bookingRepository;
@@ -36,15 +52,32 @@ public class BookingService {
         this.mapper = new ModelMapper();
     }
 
+    /**
+     * Retrieves a list of bookings for a specific room.
+     *
+     * @param id Unique identifier of the room
+     * @return A list of bookings (BookingDtoResponse)
+     * @throws NotFoundException if no room with the provided id exists
+     */
     public List<BookingDtoResponse> findAll(Long id) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
+
         List<Booking> allByRoom = bookingRepository.findAllByRoom(room);
+
         return allByRoom.stream()
                 .map(booking -> mapper.map(booking, BookingDtoResponse.class))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Fetches the available booking times for a specific room at a specific date.
+     *
+     * @param roomId Unique identifier of the room
+     * @param stringDate The specific date for booking in the form of a string
+     * @return List of available times (Availability) for booking
+     * @throws NotFoundException if no room with the provided roomId exists
+     */
     public List<Availability> getAvailableBookingTimes(Long roomId, String stringDate) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
@@ -53,11 +86,23 @@ public class BookingService {
         return findAvailableBookingTimes(room, date);
     }
 
+
+    /**
+     * Finds the available booking times.
+     *
+     * @param room the Room object
+     * @param selectedDate the selected date
+     * @return list of time slots (Availability) available for booking
+     */
     private List<Availability> findAvailableBookingTimes(Room room, LocalDate selectedDate) {
         WorkingHours workingHours = new WorkingHours(selectedDate);
-        List<Booking> bookingList = bookingRepository.findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(room, workingHours.getRoomOpen(), workingHours.getRoomClose());
-        List<Availability> availabilities = new ArrayList<>();
+        List<Booking> bookingList = Optional.ofNullable(
+                bookingRepository.findBookingsForRoomInPeriod(
+                        room,
+                        workingHours.getRoomOpen(),
+                        workingHours.getRoomClose())).orElse(Collections.emptyList());
 
+        List<Availability> availabilities = new ArrayList<>();
         for (Booking booking : bookingList) {
             LocalDateTime start = booking.getStart();
             LocalDateTime end = booking.getEnd();
@@ -80,6 +125,15 @@ public class BookingService {
         return availabilities;
     }
 
+    /**
+     * Books a room given the room id and the details of the room.
+     *
+     * @param id unique room identifier
+     * @param roomDto Data Transfer Object containing the booking details
+     * @return message indicating successful booking
+     * @throws NotFoundException if room associated with the id not found
+     * @throws GoneException if booking time has conflicts or not available
+     */
     public SuccessMessage bookRoom(Long id, BookingDtoRequest roomDto) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
@@ -109,6 +163,13 @@ public class BookingService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ConstantMessages.LOCAL_DATE_TIME_FORMATTER);
         return LocalDateTime.parse(date, formatter);
     }
+
+    /**
+     * Helper method to convert a string date to a LocalDateTime object.
+     *
+     * @param date the string representation of the date
+     * @return LocalDateTime object
+     */
     private  LocalDate toLocalDate(String date){
         if (date == null){
             return LocalDate.now();
@@ -120,8 +181,19 @@ public class BookingService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ConstantMessages.LOCAL_DATE_TIME_FORMATTER);
         return dateTime.format(formatter);
     }
+
+    /**
+     * Helper method to check if a room booking time overlaps with existing bookings.
+     *
+     * @param room Room object
+     * @param start start booking time
+     * @param end end booking time
+     * @param roomOpened start working hours of the room
+     * @param roomClosed end working hours of the room
+     * @return true if there's a time conflict, false otherwise
+     */
     private boolean isBookingTimeConflict(Room room, LocalDateTime start, LocalDateTime end, LocalDateTime roomOpened, LocalDateTime roomClosed) {
-        List<Booking> bookingList = bookingRepository.findByRoomAndStartGreaterThanEqualAndEndLessThanEqualOrderByStart(room, roomOpened, roomClosed);
+        List<Booking> bookingList = bookingRepository.findBookingsForRoomInPeriod(room, roomOpened, roomClosed);
         if (bookingList.isEmpty()){
             return false;
         }
@@ -139,6 +211,13 @@ public class BookingService {
         }
         return false;
     }
+
+    /**
+     * Deletes a booking by id.
+     *
+     * @param id unique identifier of the booking
+     * @throws NotFoundException if booking with the provided id not found
+     */
     public void delete(Long id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ConstantMessages.NOT_FOUND));
