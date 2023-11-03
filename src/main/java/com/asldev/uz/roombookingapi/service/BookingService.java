@@ -192,24 +192,26 @@ public class BookingService {
      * @param roomClosed end working hours of the room
      * @return true if there's a time conflict, false otherwise
      */
-    private boolean isBookingTimeConflict(Room room, LocalDateTime start, LocalDateTime end, LocalDateTime roomOpened, LocalDateTime roomClosed) {
+    private boolean isBookingTimeConflict(Room room, LocalDateTime start, LocalDateTime end,
+                                          LocalDateTime roomOpened, LocalDateTime roomClosed) {
+
         List<Booking> bookingList = bookingRepository.findBookingsForRoomInPeriod(room, roomOpened, roomClosed);
-        if (bookingList.isEmpty()){
-            return false;
-        }
-        for (Booking bookedRoom : bookingList){
-            if (    (start.isEqual(bookedRoom.getStart()) && end.isEqual(bookedRoom.getEnd())) ||
-                    (start.isEqual(bookedRoom.getStart()) && end.isAfter(bookedRoom.getEnd())) ||
-                    (start.isBefore(bookedRoom.getStart()) && end.isEqual(bookedRoom.getEnd())) ||
-                    (start.isBefore(bookedRoom.getStart()) && end.isAfter(bookedRoom.getEnd())) ||
-                    (start.isBefore(bookedRoom.getStart()) && end.isAfter(bookedRoom.getStart())) ||
-                    (start.isAfter(bookedRoom.getStart()) && start.isBefore(bookedRoom.getEnd())) ||
-                    (end.isAfter(bookedRoom.getStart()) && end.isBefore(bookedRoom.getEnd()))  )
-            {
-                return true;
-            }
-        }
-        return false;
+
+        return bookingList.stream()
+                .anyMatch(bookedRoom -> isOverlappingWithExistingBooking(bookedRoom, start, end));
+    }
+
+    private boolean isOverlappingWithExistingBooking(Booking bookedRoom, LocalDateTime start, LocalDateTime end) {
+        LocalDateTime bookedStart = bookedRoom.getStart();
+        LocalDateTime bookedEnd = bookedRoom.getEnd();
+
+        return (start.isEqual(bookedStart) && end.isEqual(bookedEnd)) // new booking is exactly the same as the existing one
+                || (start.isEqual(bookedStart) && end.isAfter(bookedEnd)) // new booking starts the same, but ends later
+                || (start.isBefore(bookedStart) && end.isEqual(bookedEnd)) // new booking starts earlier, but ends at the same time
+                || (start.isBefore(bookedStart) && end.isAfter(bookedEnd)) // new booking starts earlier and ends later
+                || (start.isBefore(bookedStart) && end.isAfter(bookedStart)) // new booking starts earlier and ends during the existing booking
+                || (start.isAfter(bookedStart) && start.isBefore(bookedEnd)) // new booking starts during the existing booking and ends later
+                || (end.isAfter(bookedStart) && end.isBefore(bookedEnd)); // new booking starts and ends during the existing booking
     }
 
     /**
